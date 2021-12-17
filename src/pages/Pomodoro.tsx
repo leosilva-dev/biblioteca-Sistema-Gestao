@@ -12,7 +12,7 @@ import { clearTimeout, setTimeout } from "timers";
 
 interface IPomodoro {
   minutes: number;
-  type: "work" | "short-break" | "long-break";
+  type: string;
   defineAsDone: (value: boolean) => void;
 }
 
