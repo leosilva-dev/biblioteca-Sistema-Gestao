@@ -11,24 +11,25 @@ import { clearTimeout, setTimeout } from "timers";
 // import { ArrowRightIcon } from "@chakra-ui/icons";
 
 interface IPomodoro {
-  minutes: number;
+  secondsAmount: number;
   type: string;
-  defineAsDone: (value: boolean) => void;
+  defineAsDone?: (value: boolean) => void;
 }
 
 export const Pomodoro: React.FC<IPomodoro> = ({
-  minutes,
+  secondsAmount,
   type,
   defineAsDone,
 }) => {
-  const [timeInSeconds, setTimeInSeconds] = useState(minutes * 60);
-  const [percentualDecorrido, setPercentualDecorrido] = useState(0);
-  const [isCounting, setIsCounting] = useState(false);
-  const formatted = moment.utc(timeInSeconds * 1000).format("mm:ss");
+  // const [timeInSeconds, setTimeInSeconds] = useState(minutes * 60);
+  // const [percentualDecorrido, setPercentualDecorrido] = useState(0);
+  // const formatted = moment.utc(timeInSeconds * 1000).format("mm:ss");
+  const minutes = Math.floor(secondsAmount / 60);
+  const seconds = secondsAmount % 60;
 
-  const percentualPorTempo = useMemo(() => {
-    return 100 / (minutes * 60);
-  }, [minutes]);
+  // const percentualPorTempo = useMemo(() => {
+  //   // return 100 / (secondsAmount * 60);
+  // }, [secondsAmount]);
 
   const message = useMemo(() => {
     switch (type) {
@@ -41,24 +42,24 @@ export const Pomodoro: React.FC<IPomodoro> = ({
     }
   }, [type]);
 
-  useEffect(() => {
-    if (isCounting) {
-      const time = setTimeout(() => {
-        setTimeInSeconds(timeInSeconds - 1);
-        setPercentualDecorrido(percentualDecorrido + percentualPorTempo);
-      }, 1000);
-      if (timeInSeconds === 0) {
-        clearTimeout(time);
-        defineAsDone(true);
-      }
-    }
-  }, [
-    defineAsDone,
-    isCounting,
-    percentualDecorrido,
-    percentualPorTempo,
-    timeInSeconds,
-  ]);
+  // useEffect(() => {
+  //   if (isCounting) {
+  //     const time = setTimeout(() => {
+  //       setTimeInSeconds(timeInSeconds - 1);
+  //       setPercentualDecorrido(percentualDecorrido + percentualPorTempo);
+  //     }, 1000);
+  //     if (timeInSeconds === 0) {
+  //       clearTimeout(time);
+  //       defineAsDone(true);
+  //     }
+  //   }
+  // }, [
+  //   defineAsDone,
+  //   isCounting,
+  //   percentualDecorrido,
+  //   percentualPorTempo,
+  //   timeInSeconds,
+  // ]);
 
   // const resetPomo = useCallback(() => {
   //   setIsCounting(false);
@@ -69,13 +70,12 @@ export const Pomodoro: React.FC<IPomodoro> = ({
   return (
     <VStack>
       <Box>
-        <CircularProgress
-          value={percentualDecorrido}
-          size="500px"
-          thickness="1px"
-          capIsRound
-        >
-          <CircularProgressLabel>{formatted}</CircularProgressLabel>
+        <CircularProgress value={1} size="500px" thickness="1px" capIsRound>
+          <CircularProgressLabel>{`${minutes
+            .toString()
+            .padStart(2, "0")}:${seconds
+            .toString()
+            .padStart(2, "0")}`}</CircularProgressLabel>
         </CircularProgress>
       </Box>
 
@@ -84,9 +84,6 @@ export const Pomodoro: React.FC<IPomodoro> = ({
       </Box>
 
       <Box>
-        <Button onClick={() => setIsCounting(!isCounting)}>
-          {isCounting ? "Pausar" : "Iniciar"}
-        </Button>
         {/* {isCounting && (
           <Button onClick={() => resetPomo()}>
             <ArrowRightIcon />
