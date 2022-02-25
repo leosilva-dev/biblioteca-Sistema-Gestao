@@ -8,8 +8,13 @@ import {
 import { useTask } from "../../hooks/useTask";
 
 export const Pomodoro: React.FC = () => {
-  const { isCounting, message, secondsAmount, decreaseSecondsAmount } =
-    useTask();
+  const {
+    isCounting,
+    message,
+    secondsAmount,
+    decreaseSecondsAmount,
+    defineIsCounting,
+  } = useTask();
 
   const minutes = Math.floor(secondsAmount / 60);
   const seconds = secondsAmount % 60;
@@ -17,15 +22,24 @@ export const Pomodoro: React.FC = () => {
   useEffect(() => {
     if (secondsAmount > 0 && isCounting) {
       setTimeout(() => {
-        decreaseSecondsAmount();
+        if (secondsAmount > 0) {
+          decreaseSecondsAmount();
+        }
       }, 1000);
+    } else {
+      defineIsCounting(false);
     }
-  }, [decreaseSecondsAmount, isCounting, secondsAmount]);
+  }, [decreaseSecondsAmount, defineIsCounting, isCounting, secondsAmount]);
 
   return (
     <VStack>
       <Box>
-        <CircularProgress value={0} size="350px" thickness="1px" capIsRound>
+        <CircularProgress
+          value={secondsAmount / 100}
+          size="350px"
+          thickness="1px"
+          capIsRound
+        >
           <CircularProgressLabel>{`${minutes
             .toString()
             .padStart(2, "0")}:${seconds

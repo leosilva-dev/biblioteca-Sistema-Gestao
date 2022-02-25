@@ -6,8 +6,14 @@ import {
   HStack,
   Icon,
   IconButton,
+  Button,
 } from "@chakra-ui/react";
-import { CheckIcon, DeleteIcon, DragHandleIcon } from "@chakra-ui/icons";
+import {
+  CheckIcon,
+  DeleteIcon,
+  DragHandleIcon,
+  TimeIcon,
+} from "@chakra-ui/icons";
 import { FiPlay, FiPause } from "react-icons/fi";
 
 import { ITask } from "../../service/api/task/Task";
@@ -21,11 +27,14 @@ export const Task: React.FC<ITask> = (props) => {
     handleChangeTitle,
     startTask,
     pauseTask,
+    isCounting,
   } = useTask();
 
   return (
-    <HStack padding={2}>
-      {/* <span>{`${props.order}`}</span> */}
+    <HStack
+      padding={2}
+      style={{ background: props.isRunning ? "" /* "#26C485" */ : "" }}
+    >
       <Box cursor={"grabbing"}>
         <DragHandleIcon />
       </Box>
@@ -60,11 +69,19 @@ export const Task: React.FC<ITask> = (props) => {
           icon={<CheckIcon />}
           variant="ghost"
         />
+      ) : props.isRunning ? (
+        <Button
+          isLoading
+          colorScheme="#26C485"
+          variant="link"
+          spinnerPlacement="start"
+          spinner={isCounting ? <TimeIcon /> : <CheckIcon />}
+        />
       ) : (
         <IconButton
           disabled={props.isRunning}
           fontSize="18px"
-          colorScheme="whiteAlpha"
+          colorScheme="#26C485"
           aria-label={"delete task"}
           onClick={() => {
             setShowConfirmDelete(true);

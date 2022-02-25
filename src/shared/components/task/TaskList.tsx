@@ -1,7 +1,6 @@
 import { useCallback } from "react";
-import { Button, useColorMode, VStack } from "@chakra-ui/react";
+import { useColorMode, VStack } from "@chakra-ui/react";
 import { Task } from "./Task";
-import { AddIcon } from "@chakra-ui/icons";
 import {
   DragDropContext,
   Draggable,
@@ -9,10 +8,11 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 import { useTask } from "../../hooks/useTask";
+import { NewTaskDialog } from "./NewTaskDialog";
 
 export const TaskList: React.FC = () => {
   const { colorMode } = useColorMode();
-  const { tasks, defineTasks, handleCreateTask } = useTask();
+  const { tasks, defineTasks } = useTask();
 
   const onDragEnd = useCallback(
     (result: DropResult) => {
@@ -33,15 +33,7 @@ export const TaskList: React.FC = () => {
 
   return (
     <VStack marginTop={2} spacing={2}>
-      <Button
-        leftIcon={<AddIcon />}
-        color="primary"
-        variant="solid"
-        onClick={handleCreateTask}
-      >
-        New task
-      </Button>
-
+      <NewTaskDialog />
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="lines">
           {(provided) => (

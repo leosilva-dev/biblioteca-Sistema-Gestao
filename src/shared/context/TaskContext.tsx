@@ -8,12 +8,13 @@ interface ITaskContextData {
   message: string;
   tasks: ITask[] | undefined;
   defineTasks: (tasks: ITask[]) => void;
-  handleCreateTask: () => void;
+  handleCreateTask: (title: string) => void;
   handleDeleteTask: (id: string) => void;
   handleCheckTask: (id: string) => void;
   handleChangeTitle: (id: string, value: string) => void;
   startTask: (id: string) => void;
   pauseTask: (id: string) => void;
+  defineIsCounting: (value: boolean) => void;
 }
 export const TaskContext = createContext<ITaskContextData>(
   {} as ITaskContextData
@@ -38,20 +39,28 @@ export const TaskProvider: React.FC = ({ children }) => {
     setSecondsAmount((old) => old - 1);
   };
 
-  const handleCreateTask = useCallback(() => {
-    const newTask: ITask = {
-      id: Math.random().toString(),
-      order: tasks.length + 1,
-      title: "",
-      done: false,
-      isRunning: false,
-    };
-    const allTasks = [...tasks, newTask];
-    allTasks.sort((a, b) => {
-      return a.order - b.order;
-    });
-    setTasks([...allTasks]);
-  }, [tasks]);
+  const defineIsCounting = (value: boolean) => {
+    setIsCounting(value);
+  };
+
+  const handleCreateTask = useCallback(
+    (title: string) => {
+      const newTask: ITask = {
+        id: Math.random().toString(),
+        order: tasks.length + 1,
+        title: title,
+        done: false,
+        isRunning: false,
+      };
+
+      const allTasks = [...tasks, newTask];
+      allTasks.sort((a, b) => {
+        return a.order - b.order;
+      });
+      setTasks([...allTasks]);
+    },
+    [tasks]
+  );
 
   const handleDeleteTask = useCallback(
     (id: string) => {
@@ -59,23 +68,6 @@ export const TaskProvider: React.FC = ({ children }) => {
       setTasks(result);
     },
     [tasks]
-  );
-
-  const handleCheckTask = useCallback(
-    (id: string) => {
-      const taskChecked = tasks.find((task) => task.id === id);
-      const result = tasks.filter((task) => task.id !== id);
-      if (taskChecked !== undefined) {
-        taskChecked.done = !taskChecked.done;
-        const allTasks = [...result, taskChecked];
-        allTasks.sort((a, b) => {
-          return a.order - b.order;
-        });
-
-        setTasks([...allTasks]);
-      }
-    },
-    [tasks, setTasks]
   );
 
   const handleChangeTitle = useCallback(
@@ -95,12 +87,12 @@ export const TaskProvider: React.FC = ({ children }) => {
   );
 
   const handleChangeRunning = useCallback(
-    (id: string) => {
+    (id: string, newState: boolean) => {
       const taskChecked = tasks.find((task) => task.id === id);
       const result = tasks.filter((task) => task.id !== id);
       result.forEach((task) => (task.isRunning = false));
       if (taskChecked !== undefined) {
-        taskChecked.isRunning = !taskChecked.isRunning;
+        taskChecked.isRunning = newState;
         const allTasks = [...result, taskChecked];
         allTasks.sort((a, b) => {
           return a.order - b.order;
@@ -122,19 +114,42 @@ export const TaskProvider: React.FC = ({ children }) => {
     const startedTask = tasks.find((task) => task.id === id);
     if (startedTask !== undefined) {
       setMessage(startedTask?.title);
-      handleChangeRunning(id);
+      handleChangeRunning(id, true);
+      if (startedTask.done) {
+        handleCheckTask(startedTask.id);
+      }
     }
   };
 
-  const pauseTask = (id: string) => {
-    setIsCounting(false);
-    setSecondsAmount(0);
-    const pausedTask = tasks.find((task) => task.id === id);
-    setMessage("");
-    if (pausedTask !== undefined) {
-      handleChangeRunning(id);
-    }
-  };
+  const pauseTask = useCallback(
+    (id: string) => {
+      setIsCounting(false);
+      const pausedTask = tasks.find((task) => task.id === id);
+      if (pausedTask !== undefined) {
+        handleChangeRunning(id, false);
+      }
+    },
+    [handleChangeRunning, tasks]
+  );
+
+  const handleCheckTask = useCallback(
+    (id: string) => {
+      const taskChecked = tasks.find((task) => task.id === id);
+      const result = tasks.filter((task) => task.id !== id);
+      if (taskChecked !== undefined) {
+        taskChecked.done = !taskChecked.done;
+        const allTasks = [...result, taskChecked];
+        allTasks.sort((a, b) => {
+          return a.order - b.order;
+        });
+        if (taskChecked.done) {
+          pauseTask(taskChecked.id);
+        }
+        setTasks([...allTasks]);
+      }
+    },
+    [tasks, pauseTask]
+  );
 
   return (
     <TaskContext.Provider
@@ -151,6 +166,7 @@ export const TaskProvider: React.FC = ({ children }) => {
         handleChangeTitle: handleChangeTitle,
         startTask: startTask,
         pauseTask: pauseTask,
+        defineIsCounting: defineIsCounting,
       }}
     >
       {children}
