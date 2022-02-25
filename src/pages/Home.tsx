@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Button, VStack } from "@chakra-ui/react";
-import { Pomodoro } from "./Pomodoro";
+import { Button, HStack, VStack } from "@chakra-ui/react";
+import { Pomodoro } from "../shared/components/Pomodoro/Pomodoro";
+import { TaskList } from "../shared/components/task/TaskList";
 
 const TOTAL_SECONDS_AMOUNT = 15 * 60 - 895;
 
@@ -21,12 +22,13 @@ export const Home: React.FC = () => {
   };
 
   return (
-    <VStack>
-      <Pomodoro secondsAmount={secondsAmount} message={"work"} />
-
-      <Button onClick={() => handleStartStop()}>
-        {isCounting ? "Pausar" : "Iniciar"}
-      </Button>
-    </VStack>
+    <HStack>
+      <VStack>
+        <TaskList />
+      </VStack>
+      <VStack>
+        <Pomodoro secondsAmount={secondsAmount} message={"work"} />
+      </VStack>
+    </HStack>
   );
 };

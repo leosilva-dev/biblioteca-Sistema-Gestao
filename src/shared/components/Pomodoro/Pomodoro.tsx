@@ -18,7 +18,7 @@ export const Pomodoro: React.FC<IPomodoro> = ({ secondsAmount, message }) => {
   return (
     <VStack>
       <Box>
-        <CircularProgress value={0} size="500px" thickness="1px" capIsRound>
+        <CircularProgress value={0} size="350px" thickness="1px" capIsRound>
           <CircularProgressLabel>{`${minutes
             .toString()
             .padStart(2, "0")}:${seconds
