@@ -11,20 +11,17 @@ import { CheckIcon, DeleteIcon, DragHandleIcon } from "@chakra-ui/icons";
 import { FiPlay, FiPause } from "react-icons/fi";
 
 import { ITask } from "../../service/api/task/Task";
+import { useTask } from "../../hooks/useTask";
 
-interface ITaskProps extends ITask {
-  handleDelete: (id: string) => void;
-  handleCheck: (id: string) => void;
-  handleChangeTitle: (id: string, value: string) => void;
-  handleChangeRunning: (id: string) => void;
-}
-
-export const Task: React.FC<ITaskProps> = (props) => {
+export const Task: React.FC<ITask> = (props) => {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-
-  const confirmDelete = () => {
-    props.handleDelete(props.id);
-  };
+  const {
+    handleDeleteTask,
+    handleCheckTask,
+    handleChangeTitle,
+    startTask,
+    pauseTask,
+  } = useTask();
 
   return (
     <HStack padding={2}>
@@ -36,19 +33,21 @@ export const Task: React.FC<ITaskProps> = (props) => {
       <Checkbox
         size={"lg"}
         isChecked={props.done}
-        onChange={() => props.handleCheck(props.id)}
+        onChange={() => handleCheckTask(props.id)}
       />
       <IconButton
         fontSize="18px"
         colorScheme="telegram"
         aria-label={"play or pause"}
-        onClick={() => props.handleChangeRunning(props.id)}
+        onClick={() =>
+          props.isRunning ? pauseTask(props.id) : startTask(props.id)
+        }
         icon={<Icon as={props.isRunning ? FiPause : FiPlay} />}
         variant="ghost"
       />
       <Input
         value={props.title}
-        onChange={(e) => props.handleChangeTitle(props.id, e.target.value)}
+        onChange={(e) => handleChangeTitle(props.id, e.target.value)}
       />
       {showConfirmDelete ? (
         <IconButton
@@ -56,7 +55,7 @@ export const Task: React.FC<ITaskProps> = (props) => {
           colorScheme="red"
           aria-label={"delete task"}
           onClick={() => {
-            confirmDelete();
+            handleDeleteTask(props.id);
           }}
           icon={<CheckIcon />}
           variant="ghost"

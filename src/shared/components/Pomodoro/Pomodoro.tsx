@@ -1,19 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   CircularProgress,
   CircularProgressLabel,
   VStack,
 } from "@chakra-ui/react";
+import { useTask } from "../../hooks/useTask";
 
-interface IPomodoro {
-  secondsAmount: number;
-  message?: string;
-}
+export const Pomodoro: React.FC = () => {
+  const { isCounting, message, secondsAmount, decreaseSecondsAmount } =
+    useTask();
 
-export const Pomodoro: React.FC<IPomodoro> = ({ secondsAmount, message }) => {
   const minutes = Math.floor(secondsAmount / 60);
   const seconds = secondsAmount % 60;
+
+  useEffect(() => {
+    if (secondsAmount > 0 && isCounting) {
+      setTimeout(() => {
+        decreaseSecondsAmount();
+      }, 1000);
+    }
+  }, [decreaseSecondsAmount, isCounting, secondsAmount]);
 
   return (
     <VStack>
