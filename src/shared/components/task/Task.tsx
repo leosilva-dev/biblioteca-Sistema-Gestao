@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Checkbox,
@@ -7,7 +7,7 @@ import {
   Icon,
   IconButton,
 } from "@chakra-ui/react";
-import { DeleteIcon, DragHandleIcon } from "@chakra-ui/icons";
+import { CheckIcon, DeleteIcon, DragHandleIcon } from "@chakra-ui/icons";
 import { FiPlay, FiPause } from "react-icons/fi";
 
 import { ITask } from "../../service/api/task/Task";
@@ -20,6 +20,12 @@ interface ITaskProps extends ITask {
 }
 
 export const Task: React.FC<ITaskProps> = (props) => {
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+
+  const confirmDelete = () => {
+    props.handleDelete(props.id);
+  };
+
   return (
     <HStack padding={2}>
       {/* <span>{`${props.order}`}</span> */}
@@ -44,16 +50,33 @@ export const Task: React.FC<ITaskProps> = (props) => {
         value={props.title}
         onChange={(e) => props.handleChangeTitle(props.id, e.target.value)}
       />
-      <IconButton
-        fontSize="18px"
-        colorScheme="whiteAlpha"
-        aria-label={"delete task"}
-        onClick={() => {
-          props.handleDelete(props.id);
-        }}
-        icon={<DeleteIcon />}
-        variant="ghost"
-      />
+      {showConfirmDelete ? (
+        <IconButton
+          fontSize="18px"
+          colorScheme="red"
+          aria-label={"delete task"}
+          onClick={() => {
+            confirmDelete();
+          }}
+          icon={<CheckIcon />}
+          variant="ghost"
+        />
+      ) : (
+        <IconButton
+          disabled={props.isRunning}
+          fontSize="18px"
+          colorScheme="whiteAlpha"
+          aria-label={"delete task"}
+          onClick={() => {
+            setShowConfirmDelete(true);
+            setTimeout(() => {
+              setShowConfirmDelete(false);
+            }, 5000);
+          }}
+          icon={<DeleteIcon />}
+          variant="ghost"
+        />
+      )}
     </HStack>
   );
 };
