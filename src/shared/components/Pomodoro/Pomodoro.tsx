@@ -3,17 +3,26 @@ import {
   Box,
   CircularProgress,
   CircularProgressLabel,
+  HStack,
+  Icon,
+  IconButton,
+  Text,
+  Tooltip,
   VStack,
 } from "@chakra-ui/react";
 import { useTask } from "../../hooks/useTask";
+import { FiXCircle, FiCoffee } from "react-icons/fi";
+import { RepeatClockIcon } from "@chakra-ui/icons";
 
 export const Pomodoro: React.FC = () => {
   const {
     isCounting,
-    message,
+    currentTask,
     secondsAmount,
     decreaseSecondsAmount,
     defineIsCounting,
+    AbandonTask,
+    startTask,
   } = useTask();
 
   const minutes = Math.floor(secondsAmount / 60);
@@ -36,21 +45,69 @@ export const Pomodoro: React.FC = () => {
       <Box>
         <CircularProgress
           value={secondsAmount / 100}
-          size="350px"
-          thickness="1px"
+          size="400px"
+          thickness={currentTask.isRunning ? "1px" : "0px"}
           capIsRound
         >
-          <CircularProgressLabel>{`${minutes
-            .toString()
-            .padStart(2, "0")}:${seconds
-            .toString()
-            .padStart(2, "0")}`}</CircularProgressLabel>
+          <CircularProgressLabel>
+            {currentTask.isRunning ? (
+              `${minutes.toString().padStart(2, "0")}:${seconds
+                .toString()
+                .padStart(2, "0")}`
+            ) : (
+              <VStack alignItems={"center"}>
+                <Icon boxSize="50" as={FiCoffee} />
+                <Text fontSize="2xl" as="em">
+                  Just enjoying a coffee...
+                </Text>
+              </VStack>
+            )}
+          </CircularProgressLabel>
         </CircularProgress>
       </Box>
+      {currentTask.isRunning && (
+        <HStack>
+          {isCounting ? (
+            <Tooltip
+              hasArrow
+              label="Abandon task"
+              placement="top"
+              bg="gray.300"
+              color="black"
+            >
+              <IconButton
+                fontSize="18px"
+                colorScheme="telegram"
+                aria-label={"play or pause"}
+                onClick={() => AbandonTask(currentTask.id)}
+                icon={<Icon as={FiXCircle} />}
+                variant="ghost"
+              />
+            </Tooltip>
+          ) : (
+            <Tooltip
+              hasArrow
+              label="Restart task"
+              placement="top"
+              bg="gray.300"
+              color="black"
+            >
+              <IconButton
+                fontSize="18px"
+                colorScheme="telegram"
+                aria-label={"restart"}
+                onClick={() => startTask(currentTask.id)}
+                icon={<RepeatClockIcon />}
+                variant="ghost"
+              />
+            </Tooltip>
+          )}
 
-      <Box fontWeight={"bold"} fontSize={18} fontFamily={"Helvetica"}>
-        {message}
-      </Box>
+          <Text isTruncated fontSize="xl">
+            {currentTask.title}
+          </Text>
+        </HStack>
+      )}
     </VStack>
   );
 };

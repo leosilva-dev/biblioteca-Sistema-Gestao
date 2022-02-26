@@ -7,6 +7,8 @@ import {
   Icon,
   IconButton,
   Button,
+  Tooltip,
+  Text,
 } from "@chakra-ui/react";
 import {
   CheckIcon,
@@ -14,7 +16,7 @@ import {
   DragHandleIcon,
   TimeIcon,
 } from "@chakra-ui/icons";
-import { FiPlay, FiPause } from "react-icons/fi";
+import { FiPlay } from "react-icons/fi";
 
 import { ITask } from "../../service/api/task/Task";
 import { useTask } from "../../hooks/useTask";
@@ -26,7 +28,6 @@ export const Task: React.FC<ITask> = (props) => {
     handleCheckTask,
     handleChangeTitle,
     startTask,
-    pauseTask,
     isCounting,
   } = useTask();
 
@@ -44,31 +45,55 @@ export const Task: React.FC<ITask> = (props) => {
         isChecked={props.done}
         onChange={() => handleCheckTask(props.id)}
       />
-      <IconButton
-        fontSize="18px"
-        colorScheme="telegram"
-        aria-label={"play or pause"}
-        onClick={() =>
-          props.isRunning ? pauseTask(props.id) : startTask(props.id)
-        }
-        icon={<Icon as={props.isRunning ? FiPause : FiPlay} />}
-        variant="ghost"
-      />
-      <Input
-        value={props.title}
-        onChange={(e) => handleChangeTitle(props.id, e.target.value)}
-      />
-      {showConfirmDelete ? (
+      <Tooltip
+        hasArrow
+        label={"Start task"}
+        placement="top"
+        bg="gray.300"
+        color="black"
+      >
         <IconButton
+          disabled={props.isRunning || props.done}
           fontSize="18px"
-          colorScheme="red"
-          aria-label={"delete task"}
-          onClick={() => {
-            handleDeleteTask(props.id);
-          }}
-          icon={<CheckIcon />}
+          colorScheme="telegram"
+          aria-label={"play"}
+          onClick={() => startTask(props.id)}
+          icon={<Icon as={FiPlay} />}
           variant="ghost"
         />
+      </Tooltip>
+      {props.done ? (
+        <Text isTruncated width="80" paddingLeft="4" fontSize="md" as="del">
+          {props.title}
+        </Text>
+      ) : (
+        <Input
+          isTruncated
+          width="80"
+          value={props.title}
+          onChange={(e) => handleChangeTitle(props.id, e.target.value)}
+        />
+      )}
+
+      {showConfirmDelete ? (
+        <Tooltip
+          hasArrow
+          label="Confirm delete?"
+          placement="top"
+          bg="gray.300"
+          color="black"
+        >
+          <IconButton
+            fontSize="18px"
+            colorScheme="red"
+            aria-label={"delete task"}
+            onClick={() => {
+              handleDeleteTask(props.id);
+            }}
+            icon={<CheckIcon />}
+            variant="ghost"
+          />
+        </Tooltip>
       ) : props.isRunning ? (
         <Button
           isLoading
@@ -78,20 +103,28 @@ export const Task: React.FC<ITask> = (props) => {
           spinner={isCounting ? <TimeIcon /> : <CheckIcon />}
         />
       ) : (
-        <IconButton
-          disabled={props.isRunning}
-          fontSize="18px"
-          colorScheme="#26C485"
-          aria-label={"delete task"}
-          onClick={() => {
-            setShowConfirmDelete(true);
-            setTimeout(() => {
-              setShowConfirmDelete(false);
-            }, 5000);
-          }}
-          icon={<DeleteIcon />}
-          variant="ghost"
-        />
+        <Tooltip
+          hasArrow
+          label="Delete task"
+          placement="top"
+          bg="gray.300"
+          color="black"
+        >
+          <IconButton
+            disabled={props.isRunning}
+            fontSize="18px"
+            colorScheme="#26C485"
+            aria-label={"delete task"}
+            onClick={() => {
+              setShowConfirmDelete(true);
+              setTimeout(() => {
+                setShowConfirmDelete(false);
+              }, 5000);
+            }}
+            icon={<DeleteIcon />}
+            variant="ghost"
+          />
+        </Tooltip>
       )}
     </HStack>
   );

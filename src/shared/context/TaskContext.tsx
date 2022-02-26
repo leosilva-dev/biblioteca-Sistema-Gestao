@@ -5,15 +5,15 @@ interface ITaskContextData {
   secondsAmount: number;
   decreaseSecondsAmount: () => void;
   isCounting: boolean;
-  message: string;
   tasks: ITask[] | undefined;
+  currentTask: ITask;
   defineTasks: (tasks: ITask[]) => void;
   handleCreateTask: (title: string) => void;
   handleDeleteTask: (id: string) => void;
   handleCheckTask: (id: string) => void;
   handleChangeTitle: (id: string, value: string) => void;
   startTask: (id: string) => void;
-  pauseTask: (id: string) => void;
+  AbandonTask: (id: string) => void;
   defineIsCounting: (value: boolean) => void;
 }
 export const TaskContext = createContext<ITaskContextData>(
@@ -24,9 +24,9 @@ const TOTAL_SECONDS_AMOUNT = 15 * 60 - 895;
 
 export const TaskProvider: React.FC = ({ children }) => {
   const [tasks, setTasks] = useState<ITask[]>([]);
+  const [currentTask, setCurrentTask] = useState<ITask>({} as ITask);
   const [secondsAmount, setSecondsAmount] = useState(TOTAL_SECONDS_AMOUNT);
   const [isCounting, setIsCounting] = useState(false);
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const tasksDB = taskService.getAll();
@@ -113,7 +113,8 @@ export const TaskProvider: React.FC = ({ children }) => {
     setSecondsAmount(TOTAL_SECONDS_AMOUNT);
     const startedTask = tasks.find((task) => task.id === id);
     if (startedTask !== undefined) {
-      setMessage(startedTask?.title);
+      setCurrentTask(startedTask);
+
       handleChangeRunning(id, true);
       if (startedTask.done) {
         handleCheckTask(startedTask.id);
@@ -121,7 +122,7 @@ export const TaskProvider: React.FC = ({ children }) => {
     }
   };
 
-  const pauseTask = useCallback(
+  const AbandonTask = useCallback(
     (id: string) => {
       setIsCounting(false);
       const pausedTask = tasks.find((task) => task.id === id);
@@ -143,12 +144,12 @@ export const TaskProvider: React.FC = ({ children }) => {
           return a.order - b.order;
         });
         if (taskChecked.done) {
-          pauseTask(taskChecked.id);
+          AbandonTask(taskChecked.id);
         }
         setTasks([...allTasks]);
       }
     },
-    [tasks, pauseTask]
+    [tasks, AbandonTask]
   );
 
   return (
@@ -156,16 +157,16 @@ export const TaskProvider: React.FC = ({ children }) => {
       value={{
         secondsAmount: secondsAmount,
         isCounting: isCounting,
-        message: message,
         decreaseSecondsAmount: decreaseSecondsAmount,
         tasks: tasks,
+        currentTask: currentTask,
         defineTasks: defineTasks,
         handleCreateTask: handleCreateTask,
         handleDeleteTask: handleDeleteTask,
         handleCheckTask: handleCheckTask,
         handleChangeTitle: handleChangeTitle,
         startTask: startTask,
-        pauseTask: pauseTask,
+        AbandonTask: AbandonTask,
         defineIsCounting: defineIsCounting,
       }}
     >
