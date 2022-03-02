@@ -4,12 +4,10 @@ import {
   Flex,
   HStack,
   Link,
-  IconButton,
   useDisclosure,
   useColorModeValue,
   Stack,
 } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
 import { ToggleMode } from "../toggleMode/ToggleMode";
 
 interface IMenuLinks {
@@ -43,22 +41,22 @@ const NavLink = (menulink: IMenuLinks) => {
 };
 
 export const Header = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen } = useDisclosure();
 
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-          <IconButton
+          {/* <IconButton
             size={"md"}
             icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
             aria-label={"Open Menu"}
             display={{ md: "none" }}
             onClick={isOpen ? onClose : onOpen}
-          />
+          /> */}
           <HStack spacing={8} alignItems={"center"}>
             <Box fontWeight={"bold"} fontSize={18} fontFamily={"Helvetica"}>
-              Pomodoro <AddIcon />
+              PomoTask {/* <AddIcon /> */}
             </Box>
             <HStack
               as={"nav"}

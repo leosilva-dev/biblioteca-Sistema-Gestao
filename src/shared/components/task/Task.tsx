@@ -68,12 +68,6 @@ export const Task: React.FC<ITask> = ({
         <Text isTruncated width="80" fontSize="md" as="abbr">
           {title}
         </Text>
-        // <Input
-        //   isTruncated
-        //   width="80"
-        //   value={title}
-        //   onChange={(e) => handleChangeTitle(id, e.target.value)}
-        // />
       )}
       <EditTaskDialog id={id} title={title} done={done} />
 

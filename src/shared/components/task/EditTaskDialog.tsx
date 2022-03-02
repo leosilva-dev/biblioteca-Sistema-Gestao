@@ -30,7 +30,7 @@ export const EditTaskDialog: React.FC<IEditTaskDialogProps> = ({
 }) => {
   const { handleChangeTitle } = useTask();
 
-  const [taskTitle, setTaskTile] = useState("");
+  const [taskTitle, setTaskTile] = useState(title);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const inputFocus = useRef<HTMLInputElement>(null);
