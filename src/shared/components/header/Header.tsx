@@ -8,10 +8,10 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { FiCheckCircle, FiSettings, FiUser } from "react-icons/fi";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
@@ -21,7 +21,7 @@ export const Header = () => {
             fontWeight={"bold"}
             fontSize={18}
             fontFamily={"Helvetica"}
-            onClick={() => history.push("/")}
+            onClick={() => navigate("/Home")}
             cursor={"pointer"}
           >
             <Icon as={FiCheckCircle} /> PomoTask
@@ -32,7 +32,7 @@ export const Header = () => {
             aria-label="Config"
             fontSize="18px"
             colorScheme="#26C485"
-            onClick={() => history.push("/Profile")}
+            onClick={() => navigate("/profile")}
             icon={<Icon as={FiUser} />}
             variant="ghost"
           />
@@ -40,7 +40,7 @@ export const Header = () => {
             aria-label="Config"
             fontSize="18px"
             colorScheme="#26C485"
-            onClick={() => history.push("/Config")}
+            onClick={() => navigate("/config")}
             icon={<Icon as={FiSettings} />}
             variant="ghost"
           />
