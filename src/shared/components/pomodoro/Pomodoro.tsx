@@ -23,6 +23,7 @@ export const Pomodoro: React.FC = () => {
     defineIsCounting,
     AbandonTask,
     startTask,
+    defaultTime,
   } = useTask();
 
   const minutes = Math.floor(secondsAmount / 60);
@@ -40,11 +41,15 @@ export const Pomodoro: React.FC = () => {
     }
   }, [decreaseSecondsAmount, defineIsCounting, isCounting, secondsAmount]);
 
+  const percentage = () => {
+    return (100 * (defaultTime - secondsAmount)) / defaultTime;
+  };
+
   return (
     <VStack>
       <Box>
         <CircularProgress
-          value={secondsAmount / 100}
+          value={percentage()}
           size="400px"
           thickness={currentTask.isRunning ? "1px" : "0px"}
           capIsRound
