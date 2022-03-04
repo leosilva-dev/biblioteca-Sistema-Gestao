@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Box,
   CircularProgress,
@@ -19,8 +19,6 @@ export const Pomodoro: React.FC = () => {
     isCounting,
     currentTask,
     secondsAmount,
-    decreaseSecondsAmount,
-    defineIsCounting,
     AbandonTask,
     startTask,
     defaultTime,
@@ -28,18 +26,6 @@ export const Pomodoro: React.FC = () => {
 
   const minutes = Math.floor(secondsAmount / 60);
   const seconds = secondsAmount % 60;
-
-  useEffect(() => {
-    if (secondsAmount > 0 && isCounting) {
-      setTimeout(() => {
-        if (secondsAmount > 0) {
-          decreaseSecondsAmount();
-        }
-      }, 1000);
-    } else {
-      defineIsCounting(false);
-    }
-  }, [decreaseSecondsAmount, defineIsCounting, isCounting, secondsAmount]);
 
   const percentage = () => {
     return (100 * (defaultTime - secondsAmount)) / defaultTime;

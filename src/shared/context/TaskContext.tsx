@@ -42,9 +42,9 @@ export const TaskProvider: React.FC = ({ children }) => {
     setSecondsAmount((old) => old - 1);
   };
 
-  const defineIsCounting = (value: boolean) => {
+  const defineIsCounting = useCallback((value: boolean) => {
     setIsCounting(value);
-  };
+  }, []);
 
   const defineDefaultTime = (value: number) => {
     setDefaultTime(value);
@@ -158,6 +158,29 @@ export const TaskProvider: React.FC = ({ children }) => {
     },
     [tasks, AbandonTask]
   );
+
+  // const pomoCounting = useCallback(() => {
+  //   if (secondsAmount > 0) {
+  //     decreaseSecondsAmount();
+  //   }
+  // }, [secondsAmount]);
+
+  // const startPomoClock = setTimeout(pomoCounting, 1000);
+  // const stopPomoClock = useCallback(() => {
+  //   clearTimeout(startPomoClock);
+  // }, [startPomoClock]);
+
+  useEffect(() => {
+    if (secondsAmount > 0 && isCounting) {
+      setTimeout(() => {
+        if (secondsAmount > 0) {
+          decreaseSecondsAmount();
+        }
+      }, 1000);
+    } else {
+      defineIsCounting(false);
+    }
+  }, [defineIsCounting, isCounting, secondsAmount]);
 
   return (
     <TaskContext.Provider
