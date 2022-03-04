@@ -3,6 +3,8 @@ import { ITask, taskService } from "../service/api/task/Task";
 
 interface ITaskContextData {
   secondsAmount: number;
+  defaultTime: number;
+  defineDefaultTime: (value: number) => void;
   decreaseSecondsAmount: () => void;
   isCounting: boolean;
   tasks: ITask[] | undefined;
@@ -20,12 +22,13 @@ export const TaskContext = createContext<ITaskContextData>(
   {} as ITaskContextData
 );
 
-const TOTAL_SECONDS_AMOUNT = 15 * 60 - 895;
+// const TOTAL_SECONDS_AMOUNT = 15 * 60 - 895;
 
 export const TaskProvider: React.FC = ({ children }) => {
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [currentTask, setCurrentTask] = useState<ITask>({} as ITask);
-  const [secondsAmount, setSecondsAmount] = useState(TOTAL_SECONDS_AMOUNT);
+  const [defaultTime, setDefaultTime] = useState(15 * 60);
+  const [secondsAmount, setSecondsAmount] = useState(defaultTime);
   const [isCounting, setIsCounting] = useState(false);
 
   useEffect(() => {
@@ -41,6 +44,10 @@ export const TaskProvider: React.FC = ({ children }) => {
 
   const defineIsCounting = (value: boolean) => {
     setIsCounting(value);
+  };
+
+  const defineDefaultTime = (value: number) => {
+    setDefaultTime(value);
   };
 
   const handleCreateTask = useCallback(
@@ -110,7 +117,7 @@ export const TaskProvider: React.FC = ({ children }) => {
 
   const startTask = (id: string) => {
     setIsCounting(true);
-    setSecondsAmount(TOTAL_SECONDS_AMOUNT);
+    setSecondsAmount(defaultTime);
     const startedTask = tasks.find((task) => task.id === id);
     if (startedTask !== undefined) {
       setCurrentTask(startedTask);
@@ -156,6 +163,8 @@ export const TaskProvider: React.FC = ({ children }) => {
     <TaskContext.Provider
       value={{
         secondsAmount: secondsAmount,
+        defaultTime: defaultTime,
+        defineDefaultTime: defineDefaultTime,
         isCounting: isCounting,
         decreaseSecondsAmount: decreaseSecondsAmount,
         tasks: tasks,

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Box,
   Checkbox,
-  Input,
   HStack,
   Icon,
   IconButton,
@@ -20,30 +19,29 @@ import { FiPlay } from "react-icons/fi";
 
 import { ITask } from "../../service/api/task/Task";
 import { useTask } from "../../hooks/useTask";
+import { EditTaskDialog } from "./EditTaskDialog";
 
-export const Task: React.FC<ITask> = (props) => {
+export const Task: React.FC<ITask> = ({
+  done,
+  id,
+  isRunning,
+  order,
+  title,
+}) => {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const {
-    handleDeleteTask,
-    handleCheckTask,
-    handleChangeTitle,
-    startTask,
-    isCounting,
-  } = useTask();
+  const { handleDeleteTask, handleCheckTask, startTask, isCounting } =
+    useTask();
 
   return (
-    <HStack
-      padding={2}
-      style={{ background: props.isRunning ? "" /* "#26C485" */ : "" }}
-    >
+    <HStack padding={2}>
       <Box cursor={"grabbing"}>
         <DragHandleIcon />
       </Box>
 
       <Checkbox
         size={"lg"}
-        isChecked={props.done}
-        onChange={() => handleCheckTask(props.id)}
+        isChecked={done}
+        onChange={() => handleCheckTask(id)}
       />
       <Tooltip
         hasArrow
@@ -53,27 +51,25 @@ export const Task: React.FC<ITask> = (props) => {
         color="black"
       >
         <IconButton
-          disabled={props.isRunning || props.done}
+          disabled={isRunning || done}
           fontSize="18px"
           colorScheme="telegram"
           aria-label={"play"}
-          onClick={() => startTask(props.id)}
+          onClick={() => startTask(id)}
           icon={<Icon as={FiPlay} />}
           variant="ghost"
         />
       </Tooltip>
-      {props.done ? (
-        <Text isTruncated width="80" paddingLeft="4" fontSize="md" as="del">
-          {props.title}
+      {done ? (
+        <Text isTruncated width="80" fontSize="md" as="del">
+          {title}
         </Text>
       ) : (
-        <Input
-          isTruncated
-          width="80"
-          value={props.title}
-          onChange={(e) => handleChangeTitle(props.id, e.target.value)}
-        />
+        <Text isTruncated width="80" fontSize="md" as="abbr">
+          {title}
+        </Text>
       )}
+      <EditTaskDialog id={id} title={title} done={done} />
 
       {showConfirmDelete ? (
         <Tooltip
@@ -88,13 +84,13 @@ export const Task: React.FC<ITask> = (props) => {
             colorScheme="red"
             aria-label={"delete task"}
             onClick={() => {
-              handleDeleteTask(props.id);
+              handleDeleteTask(id);
             }}
             icon={<CheckIcon />}
             variant="ghost"
           />
         </Tooltip>
-      ) : props.isRunning ? (
+      ) : isRunning ? (
         <Button
           isLoading
           colorScheme="#26C485"
@@ -111,7 +107,7 @@ export const Task: React.FC<ITask> = (props) => {
           color="black"
         >
           <IconButton
-            disabled={props.isRunning}
+            disabled={isRunning}
             fontSize="18px"
             colorScheme="#26C485"
             aria-label={"delete task"}

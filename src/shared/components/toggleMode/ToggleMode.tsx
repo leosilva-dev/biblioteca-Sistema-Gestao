@@ -16,7 +16,7 @@ export const ToggleMode: React.FC = () => {
       <WrapItem>
         <Center w="80px" h="40px">
           <HStack spacing="12px">
-            <Button onClick={toggleColorMode}>
+            <Button onClick={toggleColorMode} background={"transparent"}>
               {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
             </Button>
           </HStack>
