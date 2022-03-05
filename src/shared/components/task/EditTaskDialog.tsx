@@ -93,12 +93,12 @@ export const EditTaskDialog: React.FC<IEditTaskDialogProps> = ({
             <InputGroup>
               <InputRightElement
                 pointerEvents="none"
-                children={<Icon as={FiCornerDownLeft} />}
+                children={<Icon color={"gray.400"} as={FiCornerDownLeft} />}
               />
               <Input
                 ref={inputFocus}
                 isTruncated
-                width="80"
+                // width="80"
                 value={taskTitle}
                 onChange={(e) => ChangeTitle(e.target.value)}
               />

@@ -73,7 +73,7 @@ export const NewTaskDialog: React.FC = () => {
             <InputGroup>
               <InputRightElement
                 pointerEvents="none"
-                children={<Icon as={FiCornerDownLeft} />}
+                children={<Icon color={"gray.400"} as={FiCornerDownLeft} />}
               />
               <Input
                 ref={inputFocus}
