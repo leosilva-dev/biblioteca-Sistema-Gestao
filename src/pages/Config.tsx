@@ -20,12 +20,11 @@ import { useTask } from "../shared/hooks/useTask";
 
 export const Config: React.FC = () => {
   const { defaultTime, defineDefaultTime } = useTask();
+  const [timeDefault, setTimeDefault] = useState(defaultTime);
 
   useEffect(() => {
-    document.title = "PomoTask - Configurantion";
+    document.title = `PomoTask - Configurantion`;
   }, []);
-
-  const [timeDefault, setTimeDefault] = useState(defaultTime);
 
   const ChangeTimeDefault = (time: number) => {
     setTimeDefault(time * 60);
