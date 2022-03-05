@@ -35,6 +35,7 @@ export const Pomodoro: React.FC = () => {
     <VStack>
       <Box>
         <CircularProgress
+          color="primary"
           value={percentage()}
           size="400px"
           thickness={currentTask.isRunning ? "1px" : "0px"}
