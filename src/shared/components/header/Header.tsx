@@ -1,11 +1,9 @@
 import React from "react";
 import { Box, Button, Flex, HStack, useColorModeValue } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
 import { useBiblioteca } from "../../hooks/useBiblioteca";
 
 export const Header = () => {
-  const navigate = useNavigate();
-  const { logout } = useBiblioteca();
+  const { logout, loggedUserType } = useBiblioteca();
 
   const handleLogout = () => {
     logout();
@@ -19,10 +17,11 @@ export const Header = () => {
             fontWeight={"bold"}
             fontSize={18}
             fontFamily={"Helvetica"}
-            onClick={() => navigate("/Home")}
             cursor={"pointer"}
           >
-            Biblioteca
+            {`Biblioteca - ${
+              loggedUserType === "bibliotecario" ? "Bibliotecário" : "Leitor"
+            }`}
           </Box>
         </HStack>
         <Flex alignItems={"center"}>
