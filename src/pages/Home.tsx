@@ -1,16 +1,15 @@
-import React, { useEffect } from "react";
-import { VStack } from "@chakra-ui/react";
-import { Pomodoro } from "../shared/components/pomodoro/Pomodoro";
-import { TaskList } from "../shared/components/task/TaskList";
+import React from "react";
+import { useBiblioteca } from "../shared/hooks/useBiblioteca";
+import { BibliotecarioMain } from "./BibliotecarioMain";
+import { LeitorMain } from "./LeitorMain";
 
 export const Home: React.FC = () => {
-  useEffect(() => {
-    document.title = "PomoTask";
-  }, []);
+  const { loggedUserType } = useBiblioteca();
+
   return (
-    <VStack>
-      <Pomodoro />
-      <TaskList />
-    </VStack>
+    <>
+      {loggedUserType === "bibliotecario" && <BibliotecarioMain />}
+      {loggedUserType === "leitor" && <LeitorMain />}
+    </>
   );
 };
