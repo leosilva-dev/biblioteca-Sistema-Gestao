@@ -118,9 +118,7 @@ export const EditBookDialog: React.FC<IEditBookDialogProps> = ({ livroId }) => {
         <AlertDialogOverlay />
 
         <AlertDialogContent>
-          <AlertDialogHeader>
-            Editar livro: {title + " " + id}
-          </AlertDialogHeader>
+          <AlertDialogHeader>Editar livro: {title}</AlertDialogHeader>
           <AlertDialogCloseButton />
           <AlertDialogBody onKeyDown={handleKeyboardEvent}>
             <Box marginBottom={5}>
