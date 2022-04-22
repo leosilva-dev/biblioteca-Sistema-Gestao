@@ -42,7 +42,7 @@ export const Login: React.FC = () => {
   };
 
   const goToHome = () => {
-    navigate("/home");
+    navigate("/");
   };
 
   const signIn = () => {
@@ -61,7 +61,7 @@ export const Login: React.FC = () => {
           <Stack align={"center"}>
             <Heading fontSize={"4xl"}>Faça o seu login</Heading>
           </Stack>
-          <Box bg={"gray.50"} boxShadow={"lg"} rounded={"lg"} p={8}>
+          <Box bg={"gray.50"} boxShadow={"lg"} rounded={"lg"} p={18}>
             <Stack spacing={4}>
               <FormControl id="username">
                 <FormLabel>Username</FormLabel>
@@ -109,7 +109,7 @@ export const Login: React.FC = () => {
               _hover={{
                 bg: "blue.700",
               }}
-              onClick={() => navigate("/home")}
+              onClick={() => navigate("/")}
             >
               Votar para o perfil
             </Button>

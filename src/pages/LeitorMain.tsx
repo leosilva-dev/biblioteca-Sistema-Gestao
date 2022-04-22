@@ -19,7 +19,7 @@ export const LeitorMain: React.FC = () => {
   const { livros, handleEfetuarReserva } = useBiblioteca();
 
   return (
-    <Flex minH={"100vh"} align={"center"} justify={"center"} bg={"white"}>
+    <Flex minH={"100vh"} align={"start"} justify={"center"} bg={"white"}>
       <Box>
         <Heading size="md">{"Livros"}</Heading>
         <TableContainer>
