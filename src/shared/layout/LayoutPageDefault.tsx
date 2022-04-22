@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Wrap, WrapItem, Center } from "@chakra-ui/react";
 
 import { Header } from "../components/header/Header";
+import { useLocation } from "react-router-dom";
 
 export const LayoutPageDefault: React.FC = ({ children }) => {
+  const location = useLocation();
+  const pathToShowHeader = ["/home"];
+
+  useEffect(() => {
+    document.title = "Biblioteca";
+  }, []);
+
   return (
     <>
-      <Header />
+      {pathToShowHeader.includes(location.pathname) && <Header />}
       <Wrap
         marginRight={{ md: 100, sm: 30 }}
         marginLeft={{ md: 100, sm: 30 }}
