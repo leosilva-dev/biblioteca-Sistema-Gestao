@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 
 export const LayoutPageDefault: React.FC = ({ children }) => {
   const location = useLocation();
-  const pathToShowHeader = ["/home"];
+  const pathToShowHeader = ["/"];
 
   useEffect(() => {
     document.title = "Biblioteca";

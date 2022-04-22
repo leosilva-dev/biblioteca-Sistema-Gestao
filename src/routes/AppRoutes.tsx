@@ -7,8 +7,8 @@ export const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route path="/home" element={<PrivateRoute component={Home} />} />
-      <Route path="*" element={<Home />} />
+      <Route path="/" element={<PrivateRoute component={Home} />} />
+      <Route path="*" element={<PrivateRoute component={Home} />} />
     </Routes>
   );
 };
