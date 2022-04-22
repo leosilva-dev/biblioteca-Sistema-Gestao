@@ -1,14 +1,13 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { Home, UserProfile, Config } from "../pages";
+import { Home, Login } from "../pages";
+import { PrivateRoute } from "./PrivateRoute";
 
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/Home" element={<Home />} />
-      <Route path="/profile" element={<UserProfile />} />
-      <Route path="/Config" element={<Config />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/home" element={<PrivateRoute component={Home} />} />
       <Route path="*" element={<Home />} />
     </Routes>
   );
