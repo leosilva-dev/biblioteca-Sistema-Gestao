@@ -1,17 +1,15 @@
 import React from "react";
-import {
-  Box,
-  Flex,
-  HStack,
-  useColorModeValue,
-  IconButton,
-  Icon,
-} from "@chakra-ui/react";
-import { FiCheckCircle, FiSettings, FiUser } from "react-icons/fi";
+import { Box, Button, Flex, HStack, useColorModeValue } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { useBiblioteca } from "../../hooks/useBiblioteca";
 
 export const Header = () => {
   const navigate = useNavigate();
+  const { logout } = useBiblioteca();
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
@@ -24,26 +22,11 @@ export const Header = () => {
             onClick={() => navigate("/Home")}
             cursor={"pointer"}
           >
-            <Icon as={FiCheckCircle} /> PomoTask
+            Biblioteca
           </Box>
         </HStack>
         <Flex alignItems={"center"}>
-          <IconButton
-            aria-label="Config"
-            fontSize="18px"
-            colorScheme="#26C485"
-            onClick={() => navigate("/profile")}
-            icon={<Icon as={FiUser} />}
-            variant="ghost"
-          />
-          <IconButton
-            aria-label="Config"
-            fontSize="18px"
-            colorScheme="#26C485"
-            onClick={() => navigate("/config")}
-            icon={<Icon as={FiSettings} />}
-            variant="ghost"
-          />
+          <Button onClick={() => handleLogout()}>Logout</Button>
         </Flex>
       </Flex>
     </Box>
